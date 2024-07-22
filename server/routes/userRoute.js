@@ -1,22 +1,13 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const router = express.Router();
-const User = require('../model/User');
-const validateNewUser = require('../middleware/validateNewUser');
-const { registerUser, handleLogin } = require('../controllers/userController');
+const { signup, login, updateUser,userDetails } = require('../controllers/auth');
 
-router.get('/', (req, res) => {
-    res.json({
-        message: 'User route is working fine',
-        status: 'Working',
-    });
-});
+router.post('/signup', signup);
 
-// We'll create a validation middleware (data is missing)
-router.post('/register', validateNewUser, registerUser());
+router.post('/login', login);
 
+router.put('/updateuser/:userId', updateUser);  // New route for updating user details
 
-router.post('/login', handleLogin());
+router.get("/userdetails/:id", userDetails);
 
 module.exports = router;

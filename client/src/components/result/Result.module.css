@@ -1,0 +1,98 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: linear-gradient(to right, #171923 , #1A202C);
+  color: white;
+  height: 100vh;
+  padding: 50px;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  font-weight: 300;
+  color: #A0AEC0;
+  margin-bottom: 2rem;
+}
+
+.emphasis {
+  font-weight: bold;
+}
+
+.chatBox {
+  background-image: linear-gradient(to right, #171923 , #1A202C);
+  border-radius: 10px;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  text-align: left; /* Align text to the left */
+}
+
+.messageContainer {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.messages {
+  flex: 1;
+}
+
+.line1, .line2, .line3 {
+  margin: 5px 0;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+.line1 {
+  background-color: #1E293B;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.line2 {
+  background-color: #1E293B;
+  border-radius: 10px;
+  padding: 10px;
+  animation-delay: 1s;
+}
+
+.line3 {
+  background-color: #1E293B;
+  border-radius: 10px;
+  padding: 10px;
+  animation-delay: 2s;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.userMessage {
+  background-color: #005eff;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  text-align: right;
+  width: fit-content;
+  align-self: flex-end;
+  margin-left: auto;
+  font-weight: 500;
+}

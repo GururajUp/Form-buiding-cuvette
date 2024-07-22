@@ -1,8 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
-const userRoute = require('./routes/userRoute');
-const errorHandler = require('./middleware/errorHandler');
 
 
 const PORT = 3000;
@@ -19,7 +17,13 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log('Failed to connect to MongoDB', err);
 });
 
-app.use('/user', userRoute);
+const userRouter=require("./routes/userRoute")
+app.use("/user",userRouter)
+const folderRouter=require("./routes/folderRoute")
+app.use("/folder",folderRouter)
+const formRouter=require("./routes/formRoute")
+app.use("/form",formRouter)
+
 
 
 app.get('/health', (req, res) => {
@@ -38,10 +42,7 @@ app.use("*", (req, res) => {
         status: 'Error',
     });
 });
-//localhost:3000/health
-
-app.use(errorHandler);
-
+//localhost:3000/healt
 
 
 app.listen(PORT, () => {
