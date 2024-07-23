@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
+const cors = require("cors");
 
 
 const PORT = 3000;
@@ -8,6 +9,13 @@ const PORT = 3000;
 const app = express();
 
 app.use(express.json());
+
+const corsOptions = {
+    origin: 'http://localhost:5173', 
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 
 // Connect to MongoDB
@@ -29,7 +37,7 @@ app.use("/form",formRouter)
 app.get('/health', (req, res) => {
     // res.send
     res.json({
-        message: 'Job listing API is working fine',
+        message: 'Formbot listing API is working fine',
         status: 'Working',
         date: new Date().toLocaleDateString()
     });

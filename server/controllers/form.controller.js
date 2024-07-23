@@ -1,3 +1,4 @@
+const User = require("../model/User");
 const Form = require("../model/Form")
 
 
@@ -62,4 +63,18 @@ exports.deleteform=async(req,res)=>{
     } catch (error) {
         res.status(500).json({ message: "Error deleting Form", error });
     }
+}
+
+exports.getFormByUser=async(req,res)=>{
+    try {
+        const userId = req.params.userId;
+        const forms = await Form.find({ userId: userId });
+        if (!forms) {
+          return res.status(404).json({ message: 'Forms not found' });
+        }
+        res.status(200).json(forms);
+      } catch (error) {
+        console.error("Error fetching forms:", error);
+        res.status(500).json({ message: error.message });
+      }
 }

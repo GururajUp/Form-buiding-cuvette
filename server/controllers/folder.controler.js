@@ -66,7 +66,7 @@ exports.deleteFolder = async (req, res) => {
 exports.getFoldersByUser =async(req,res)=>{
     try {
         const userId = req.params.userId;
-
+console.log("user id in controler",userId);
         // Find the user by ID
         const user = await User.findById(userId);
         if (!user) {
