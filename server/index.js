@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
 const cors = require("cors");
+const path = require("path")
 
 
 const PORT = process.env.PORT || 3000;
@@ -9,6 +10,8 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
+
+app.use(express.static(path.join(_dirname, 'public')))
 
 const corsOptions = {
     origin: 'http://localhost:5173', 
