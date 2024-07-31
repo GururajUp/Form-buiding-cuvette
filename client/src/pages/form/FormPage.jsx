@@ -1,28 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PiTextT } from "react-icons/pi";
-import { CiImageOn } from "react-icons/ci";
-import { MdOutlineGif } from "react-icons/md";
-import { FaHashtag } from "react-icons/fa";
-import { LuMessageSquare } from "react-icons/lu";
-import { MdAlternateEmail } from "react-icons/md";
-import { FiPhone } from "react-icons/fi";
-import { CiCalendar } from "react-icons/ci";
-import { CiStar } from "react-icons/ci";
-import { TbMovie } from "react-icons/tb";
-import { LuCheckSquare } from "react-icons/lu";
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './FormPage.module.css';
-import { saveForm } from '../../api/Form';
-import axios from 'axios';
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { saveForm, fetchFormById, updateForm, updateViewCount } from '../../api/Form';
 import toast from 'react-hot-toast';
+import Navbar2 from '../../components/navbar2/Navbar2';
+import Sidebar from '../../components/formCompo/Sidebar'
+import FieldContainer from '../../components/formCompo/FieldContainer'
+import { RiFlagFill } from "react-icons/ri";
 
-const FormPage = () => {
-  const navigate = useNavigate();
+
+const FormPage = ({ isNewForm }) => {
+  const { userId, formId, folderId } = useParams();
+  const [errors, setErrors] = useState({});
+  const [uniqueUrl, setUniqueUrl] = useState("");
   const [fields, setFields] = useState([]);
   const [formName, setFormName] = useState("");
-  const [errors, setErrors] = useState({});
-  const [folderId, setFolderId] = useState(null);
   const [bubbleCounts, setBubbleCounts] = useState({
     Text: { max: 0, available: new Set() },
     Image: { max: 0, available: new Set() },
@@ -38,36 +30,158 @@ const FormPage = () => {
     Rating: { max: 0, available: new Set() },
     Buttons: { max: 0, available: new Set() },
   });
+  const [loading, setLoading] = useState(false);
+  const [hasBubblesOrInputs, setHasBubblesOrInputs] = useState(false);
+  const navigate = useNavigate();
+
+  const imageUrlRegex = /\.(jpeg|jpg|gif|png)$/;
+  const videoUrlRegex = /\.(mp4|webm|ogg)$/;
+  const gifUrlRegex = /\.(gif)$/;
 
   useEffect(() => {
-    const fetchFolderId = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/folder/getfolderid');
-        setFolderId(response.data.folderId || null);
-      } catch (error) {
-        console.error("Error fetching folder ID", error);
+    if (!isNewForm && formId) {
+      const fetchFormDetails = async () => {
+        try {
+          const response = await fetchFormById(formId);
+          setFormName(response.form.formname);
+          setFields(response.form.fields);
+          setUniqueUrl(response.form.uniqueUrl || generateUniqueUrl());
+
+          const bubbleCounts = {
+            Text: { max: 0, available: new Set() },
+            Image: { max: 0, available: new Set() },
+            Video: { max: 0, available: new Set() },
+            GIF: { max: 0, available: new Set() }
+          };
+
+          const inputCounts = {
+            Text: { max: 0, available: new Set() },
+            Number: { max: 0, available: new Set() },
+            Email: { max: 0, available: new Set() },
+            Phone: { max: 0, available: new Set() },
+            Date: { max: 0, available: new Set() },
+            Rating: { max: 0, available: new Set() },
+            Buttons: { max: 0, available: new Set() }
+          };
+
+          response.form.fields.forEach(field => {
+            if (field.heading.startsWith('Text')) bubbleCounts.Text.max++;
+            if (field.heading.startsWith('Image')) bubbleCounts.Image.max++;
+            if (field.heading.startsWith('Video')) bubbleCounts.Video.max++;
+            if (field.heading.startsWith('GIF')) bubbleCounts.GIF.max++;
+            if (field.heading.startsWith('Input Text')) inputCounts.Text.max++;
+            if (field.heading.startsWith('Input Number')) inputCounts.Number.max++;
+            if (field.heading.startsWith('Input Email')) inputCounts.Email.max++;
+            if (field.heading.startsWith('Input Phone')) inputCounts.Phone.max++;
+            if (field.heading.startsWith('Input Date')) inputCounts.Date.max++;
+            if (field.heading.startsWith('Input Rating')) inputCounts.Rating.max++;
+            if (field.heading.startsWith('Input Buttons')) inputCounts.Buttons.max++;
+          });
+          setBubbleCounts(bubbleCounts);
+          setInputCounts(inputCounts);
+
+          // Update view count
+          await updateViewCount(formId);
+        } catch (error) {
+          console.error("Error while fetching form details", error);
+          toast.error("Error while fetching form details");
+        }
+      };
+
+      fetchFormDetails();
+    }
+  }, [isNewForm, formId]);
+
+  useEffect(() => {
+    setHasBubblesOrInputs(fields.length > 0);
+  }, [fields]);
+
+  const handleSaveOrUpdateForm = async () => {
+    if (loading) return;
+    if (!hasBubblesOrInputs) {
+      toast.error("Please select at least one bubble or input field.");
+      return;
+    }
+    setLoading(true);
+
+    const requiredFieldTypes = ['Text', 'Image', 'Video', 'GIF', 'Buttons'];
+    const newErrors = {};
+
+    // Validate if required fields are filled
+    const isFormNameFilled = formName.trim() !== "";
+    if (!isFormNameFilled) {
+      newErrors.formName = 'Form name is required';
+    }
+
+    fields.forEach((field, index) => {
+      if (requiredFieldTypes.includes(field.type)) {
+        if (field.value.trim() === "" && !(field.heading.startsWith('Input') && !field.heading.startsWith('Input Buttons'))) {
+          newErrors[index] = `${field.heading} is required`;
+        } else if (field.type === 'Image' && !imageUrlRegex.test(field.value)) {
+          newErrors[index] = 'Image URL is not valid';
+          toast.error('Image URL is not valid');
+        } else if (field.type === 'Video' && !videoUrlRegex.test(field.value)) {
+          newErrors[index] = 'Video URL is not valid';
+          toast.error('Video URL is not valid');
+        } else if (field.type === 'GIF' && !gifUrlRegex.test(field.value)) {
+          newErrors[index] = 'GIF URL is not valid';
+          toast.error('GIF URL is not valid');
+        }
       }
-    };
+    });
 
-    fetchFolderId();
-  }, []);
+    setErrors(newErrors);
 
-  const bubbles = [
-    { name: 'Text', icon: <LuMessageSquare size={"20px"} color='#4B83FF' /> },
-    { name: 'Image', icon: <CiImageOn size={"20px"} color='#4B83FF' /> },
-    { name: 'Video', icon: <TbMovie size={"20px"} color='#4B83FF' /> },
-    { name: 'GIF', icon: <MdOutlineGif size={"25px"} color='#4B83FF' /> }
-  ];
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        const formDetails = {
+          formname: formName,
+          folderId: folderId || null,
+          theme: "default",
+          fields,
+        };
 
-  const inputs = [
-    { name: 'Text', icon: <PiTextT size={"20px"} color='#FFA54C' /> },
-    { name: 'Number', icon: <FaHashtag size={"18px"} color='#FFA54C' /> },
-    { name: 'Email', icon: <MdAlternateEmail size={"20px"} color='#FFA54C' /> },
-    { name: 'Phone', icon: <FiPhone size={"18px"} color='#FFA54C' /> },
-    { name: 'Date', icon: <CiCalendar size={"20px"} color='#FFA54C' /> },
-    { name: 'Rating', icon: <CiStar size={"20px"} color='#FFA54C' /> },
-    { name: 'Buttons', icon: <LuCheckSquare size={"20px"} color='#FFA54C' /> }
-  ];
+        if (isNewForm) {
+          const response = await saveForm(formDetails);
+          toast.success("Form saved successfully");
+          setUniqueUrl(response.form.uniqueUrl);
+          navigate(`/dashboard/${userId}/${response.form._id}`);
+        } else {
+          await updateForm(formId, formDetails);
+          toast.success("Form updated successfully");
+          navigate(`/dashboard/${userId}/${formId}`);
+        }
+      } catch (error) {
+        console.error("Error saving form", error.message);
+        toast.error(`Error saving form: ${error.message}`);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      toast.error("Please fill out all required fields.");
+      setLoading(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!uniqueUrl) {
+      toast.error("Please save the form before sharing.");
+      return;
+    }
+    if (!hasBubblesOrInputs) {
+      toast.error("Please add at least one bubble or input field before sharing.");
+      return;
+    }
+
+    try {
+      const shareUrl = `${window.location.origin}/form/${uniqueUrl}`;
+      navigator.clipboard.writeText(shareUrl);
+      toast.success("Form link copied to clipboard");
+    } catch (error) {
+      console.error("Error sharing form", error.message);
+      toast.error(`Error sharing form: ${error.message}`);
+    }
+  };
 
   const handleBubbleClick = (type) => {
     setBubbleCounts(prevCounts => {
@@ -80,7 +194,7 @@ const FormPage = () => {
 
       setFields(prevFields => [
         ...prevFields,
-        { type, heading: `${type} ${newCount}` }
+        { type, heading: `${type} ${newCount}`, value: '' }
       ]);
 
       return {
@@ -104,7 +218,7 @@ const FormPage = () => {
 
       setFields(prevFields => [
         ...prevFields,
-        { type, heading: `Input ${type} ${newCount}` }
+        { type, heading: `Input ${type} ${newCount}`, value: '' }
       ]);
 
       return {
@@ -121,6 +235,13 @@ const FormPage = () => {
     setFields(prevFields => {
       const updatedFields = [...prevFields];
       updatedFields[index].value = value;
+
+      if (updatedFields[index].value.trim() !== "") {
+        const newErrors = { ...errors };
+        delete newErrors[index];
+        setErrors(newErrors);
+      }
+
       return updatedFields;
     });
   };
@@ -150,111 +271,32 @@ const FormPage = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newErrors = {};
-    fields.forEach((field, index) => {
-      if (!field.value) {
-        newErrors[index] = 'This field is required';
-      }
-    });
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
-      try {
-        const formDetails = {
-          formname: formName,
-          folderId,
-          theme: "default",
-          fields,
-        };
-
-        const response = await saveForm(formDetails);
-        console.log("Form saved successfully", response);
-        toast.success("Form saved successfully");
-      } catch (error) {
-        console.error("Error saving form", error.message);
-        toast.error(`Error saving form: ${error.message}`);
-      }
-    }
-  };
-
   return (
-    <div className={styles.container}>
-      <nav className={styles.navbar}>
-        <input
-          type="text"
-          className={styles.input}
-          placeholder="Enter Form Name"
-          value={formName}
-          onChange={(e) => setFormName(e.target.value)}
+    <div className={`${styles.container} open-sans`}>
+      <Navbar2
+        currentPage="form"
+        formName={formName}
+        setFormName={setFormName}
+        handleSave={handleSaveOrUpdateForm}
+        handleShare={handleShare}
+        uniqueUrl={uniqueUrl}
+        showFormNameInput={true}
+        hasBubblesOrInputs={hasBubblesOrInputs}
+      />
+      <div className={styles.startBox}>
+        <span><RiFlagFill /></span><span>Start</span>
+      </div>
+      <div className={styles.fieldsContainer}>
+        <Sidebar
+          handleBubbleClick={handleBubbleClick}
+          handleInputClick={handleInputClick}
         />
-        <div className={styles.centerButtons}>
-          <button className={styles.tabButton}>Flow</button>
-          <button onClick={() => navigate("/theme")} className={styles.tabButton}>Theme</button>
-          <button onClick={() => navigate("/response")} className={styles.tabButton}>Response</button>
-        </div>
-        <div className={styles.rightButtons}>
-          <button className={styles.actionButton}>Share</button>
-          <button className={styles.saveButton} onClick={handleSubmit}>Save</button>
-          <button className={styles.closeButton}>X</button>
-        </div>
-      </nav>
-      <div className={styles.mainContent}>
-        <div className={styles.sidebar}>
-          <div className={styles.section}>
-            <h3>Bubbles</h3>
-            <div className={styles.buttonGroup}>
-              {bubbles.map((bubble, index) => (
-                <button
-                  key={index}
-                  className={styles.bubbleButton}
-                  onClick={() => handleBubbleClick(bubble.name)}
-                >
-                  <span>{bubble.icon}</span>
-                  <span>{bubble.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className={styles.section}>
-            <h3>Inputs</h3>
-            <div className={styles.buttonGroup}>
-              {inputs.map((input, index) => (
-                <button
-                  key={index}
-                  className={styles.inputButton}
-                  onClick={() => handleInputClick(input.name)}
-                >
-                  <span>{input.icon}</span>
-                  <span>{input.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className={styles.fieldsContainer}>
-          {fields.map((field, index) => (
-            <div key={index} className={styles.formField}>
-              <div className={styles.fieldHeader}>
-                <label>{field.heading}</label>
-                <RiDeleteBin6Line 
-                  size={"20px"}
-                  color='#f55050'
-                  className={styles.deleteIcon}
-                  onClick={() => handleDelete(index, field.type, field.heading.includes("Input"))}
-                />
-              </div>
-              <input
-                type="text"
-                value={field.value || ''}
-                onChange={(e) => handleChange(index, e.target.value)}
-                className={errors[index] ? styles.errorInput : ''}
-              />
-              {errors[index] && <span className={styles.errorMessage}>{errors[index]}</span>}
-            </div>
-          ))}
-        </div>
+        <FieldContainer
+          fields={fields}
+          handleChange={handleChange}
+          handleDelete={handleDelete}
+          errors={errors}
+        />
       </div>
     </div>
   );

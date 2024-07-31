@@ -1,53 +1,10 @@
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #18181b;
-    padding: 10px;
-    position: fixed; /* Make the navbar fixed */
-    top: 0; /* Position at the top */
-    left: 0; /* Align with the left edge */
-    width: 100%; /* Full width of the viewport */
-    z-index: 1000; /* Ensure it stays on top */
-    flex-shrink: 0;
-  }
-  .centerButtons {
-    display: flex;
-    flex-grow: 1;
-    justify-content: center;
-  }
-  .tabButton {
-    margin: 0 5px;
-    padding: 5px 10px;
-    background-color: #1c1c1c;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .tabButton:hover {
-    background-color: #444;
-  }
-  .rightButtons {
-    display: flex;
-    align-items: center;
-    margin-left: auto; /* Push the buttons to the right */
-  }
-  
-  .actionButton,
-  .saveButton,
-  .closeButton {
-    margin-left: 5px;
-    padding: 5px 10px;
-    background-color: #444;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px; /* Add border-radius for better appearance */
-  }
-  
-  .actionButton:hover,
-  .saveButton:hover,
-  .closeButton:hover {
-    background-color: #848890;
-  }
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
+  flex-grow: 1;
+}

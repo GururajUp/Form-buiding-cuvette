@@ -10,7 +10,7 @@ const login = async (email, password) => {
         if (error.response && error.response.data) {
             throw new Error(error.response.data.message);
         } else {
-            throw new Error("Error while Login");
+            throw new Error("Error in Login");
         }
     }
 }
@@ -26,7 +26,7 @@ const updateUser = async (username, email, newpassword, oldpassword, userId) => 
       if (error.response && error.response.data) {
         throw new Error(error.response.data.message);
       } else {
-        throw new Error("An unknown error occurred");
+        throw new Error("Error occurred");
       }
     }
   };
@@ -40,7 +40,7 @@ const Register = async (username, email, password, confirmpassword) => {
         if (error.response && error.response.data) {
             throw new Error(error.response.data.message);
         } else {
-            throw new Error("An unknown error occurred");
+            throw new Error("Error occurred");
         }
     }
 }
@@ -53,7 +53,7 @@ const getUserFolders = async (userId) => {
         if (error.response && error.response.data) {
             throw new Error(error.response.data.message);
         } else {
-            throw new Error("An unknown error occurred");
+            throw new Error("Error occurred");
         }
     }
 }
@@ -65,9 +65,13 @@ const userDetails = async (id) => {
         if (error.response && error.response.data) {
             throw new Error(error.response.data.message);
         } else {
-            throw new Error("An unknown error occurred");
+            throw new Error("Error occurred");
         }
     }
 };
 
-export { login, Register, getUserFolders,updateUser,userDetails };
+export { login,
+         Register, 
+         getUserFolders,
+         updateUser,
+         userDetails };

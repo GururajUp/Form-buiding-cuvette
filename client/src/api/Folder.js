@@ -3,7 +3,7 @@ import axios from 'axios';
 const BACKEND_ORIGIN_URL = 'http://localhost:3000';
 
 const createFolder = async (foldername, userId) => {
-  const token = localStorage.getItem('token'); // Retrieve token from local storage
+  const token = localStorage.getItem('token'); 
 
   if (!token) {
     throw new Error("No token found, please log in again.");
@@ -24,7 +24,7 @@ const createFolder = async (foldername, userId) => {
     if (error.response && error.response.data) {
       throw new Error(error.response.data.message);
     } else {
-      throw new Error("An unknown error occurred");
+      throw new Error("Error occurred");
     }
   }
 };
@@ -50,7 +50,7 @@ const deleteFolder = async (folderId) => {
     if (error.response && error.response.data) {
       throw new Error(error.response.data.message);
     } else {
-      throw new Error("An unknown error occurred");
+      throw new Error("Error occurred");
     }
   }
 };

@@ -1,0 +1,53 @@
+.integrationContainer {
+    background-color: #151d2b;
+    color: #ffffff;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .iconsGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 20px;
+    justify-items: center;
+    margin-bottom: 40px;
+  }
+  
+  .iconBox {
+    width: 60px;
+    height: 60px;
+    background-color: #1A202C;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.10s ease, box-shadow 0.2s ease;
+  }
+  
+  .iconBox:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .iconBox img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+  }
+  
+  .description {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .description h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .description p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  

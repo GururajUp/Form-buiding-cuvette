@@ -14,10 +14,10 @@ function Navbar() {
       </div>
 
       <div className={styles.navbar2}>
-        <NavLink to="/signin" className={styles.navLink}>
+        <NavLink to="/login" className={styles.navLink}>
           <div className={`${styles.signin} open-sans`}> Sign in</div>
         </NavLink>
-        <NavLink to="/signup" className={styles.navLink}>
+        <NavLink to="/register" className={styles.navLink}>
           <div className={`${styles.signup} open-sans`}> Create a FormBot</div>
         </NavLink>
       </div>

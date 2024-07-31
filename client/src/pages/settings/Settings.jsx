@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './Settings.module.css';
 import { IoIosLogOut } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
+import styles from './Settings.module.css';
 import toast from "react-hot-toast";
 import { updateUser } from "../../api/User";
 
 const Settings = ({ handleLogout }) => {
   const [username, setUsername] = useState('');
+  const [showOldPassword, setShowOldPassword] = useState(false);
   const [email, setEmail] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
   const navigate = useNavigate();
 
-  const userId = localStorage.getItem('user'); // Retrieve userId from local storage
+  const userId = localStorage.getItem('user'); 
 
   const submitHandler = async (e) => {
     e.preventDefault();

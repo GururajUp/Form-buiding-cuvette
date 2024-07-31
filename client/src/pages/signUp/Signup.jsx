@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { Register } from '../../api/User';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import traingle from "../../assets/taringlelogin.png";
+import Ellipsedown from "../../assets/Ellipsedown.png";
+import Ellipseupper from "../../assets/Ellipseupper.png";
+import { IoArrowBack } from "react-icons/io5";
 import styles from './Signup.module.css'; 
 
 function Signup() {
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
@@ -39,26 +44,55 @@ function Signup() {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
+    // Check for uppercase letters in email
+    if (formData.email !== formData.email.toLowerCase()) {
+      toast.error('Email should be in lowercase');
+      newErrors.email = 'Email should be in lowercase';
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
     try {
-      const responseData = await Register(formData.username, formData.email, formData.password, formData.confirmPassword);
+      // Call the Register API
+      const responseData = await Register(
+        formData.username,
+        formData.email.toLowerCase(), // Convert email to lowercase before sending
+        formData.password,
+        formData.confirmPassword
+      );
+
+      // Check if registration was successful based on the API response
       if (responseData.success) {
-        toast.success(responseData.message);
-        navigate('/login');
+        // Show success toast
+        toast.success(responseData.message || 'User registered successfully!');
+        // Navigate to login page after a delay to show the toast
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500); // Adjust the delay time as necessary
       } else {
-        toast.error(responseData.message);
+        // Show error toast if registration failed
+        toast.error(responseData.message || 'Registration failed');
       }
     } catch (error) {
+      // Show error toast if an exception occurred
       toast.error(error.message || 'An error occurred during signup');
     }
+  };
+  const handleBackClick = () => {
+    navigate(-1); // Navigate back one page in the browser history
   };
 
   return (
     <div className={`${styles.container} inter`}>
+      {/* Add decorative images */}
+      <div onClick={handleBackClick}  className={styles.shape} style={{ top: "5%", left: "5%", cursor: "pointer"  }}><IoArrowBack size={"25px"} color="white" /></div>
+      <img src={traingle} alt="triangle" className={`${styles.shape} ${styles.traingle}`} />
+      <img src={Ellipseupper} alt="ellipse upper" className={`${styles.shape} ${styles.ellipseUpper}`} />
+      <img src={Ellipsedown} alt="ellipse down" className={`${styles.shape} ${styles.ellipseDown}`} />
+
       <div className={styles.formContainer}>
         <form onSubmit={handleSubmit}>
           <div className={`${styles.inputGroup} ${errors.username ? styles.inputGroupError : ''}`}>
@@ -118,7 +152,7 @@ function Signup() {
           </div>
         </form>
         <p style={{ textAlign: 'center', marginTop: '10px' }}>
-          Already have an account? <Link to="/signin" style={{ color: 'blue', cursor: 'pointer',textDecoration:'none' }}>Login</Link>
+          Already have an account? <Link to="/login" style={{ color: 'blue', cursor: 'pointer', textDecoration: 'none' }}>Login</Link>
         </p>
       </div>
     </div>

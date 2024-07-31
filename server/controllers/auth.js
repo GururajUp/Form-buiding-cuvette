@@ -26,12 +26,25 @@ exports.signup = async (req, res) => {
         });
 
         await newUser.save();
-        res.status(201).json({ success: true, message: 'User registered successfully' });
+
+        // Generate JWT token after successful signup
+        const token = jwt.sign(
+            { userId: newUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.status(201).json({
+            success: true,
+            message: 'User registered successfully',
+            token,
+            user: newUser._id  // Include the user ID in the response
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
 exports.login = async (req, res) => {
     try {
@@ -39,12 +52,12 @@ exports.login = async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'Please sign up first' });
+            return res.status(400).json({ message: 'Please register first' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Password is not correct' });
+            return res.status(400).json({ message: 'Password is not matching' });
         }
 
         const token = jwt.sign(
@@ -57,72 +70,74 @@ exports.login = async (req, res) => {
             success: true,
             message: 'User logged in successfully',
             token,
-            user: user._id  // Include the user ID in the response
+            user: user._id  
         });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-}
-
-exports.updateUser = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const { username, email, newpassword, oldpassword } = req.body;
-
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        if (oldpassword && newpassword) {
-            const isMatch = await bcrypt.compare(oldpassword, user.password);
-            if (!isMatch) {
-                return res.status(400).json({ message: 'Old password is not correct' });
-            }
-            user.password = await bcrypt.hash(newpassword, 12);
-            user.confirmpassword = user.password;
-        }
-
-        if (username) user.username = username;
-        if (email) user.email = email;
-
-        await user.save();
-
-        res.status(200).json({ success: true, message: 'User updated successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
-exports.userDetails = async (req, res) => {
+exports.updateUser = async (req, res) => {
+    console.log('Request Body:', req.body); 
+    console.log('User ID:', req.params.userId); 
     try {
-      const { id } = req.params; 
-      if (!id) {
-        return res.status(400).json({
-          success: false,
-          message: "User ID is required", 
-        });
+      const { userId } = req.params;
+      const { username, email, newpassword, oldpassword } = req.body;
+  
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
       }
-      const userDetails = await User.findById(id); 
-      if (!userDetails) {
-        return res.status(404).json({
-          success: false,
-          message: "User not found",
-        });
+  
+      if (oldpassword && newpassword) {
+        const isMatch = await bcrypt.compare(oldpassword, user.password);
+        if (!isMatch) {
+          return res.status(400).json({ message: 'Old password is not correct' });
+        }
+        user.password = await bcrypt.hash(newpassword, 12);
       }
-      return res.status(200).json({
-        success: true,
-        userDetails,
-        message: "User details fetched successfully", 
-      });
+  
+      if (username) user.username = username;
+      if (email) user.email = email;
+  
+      await user.save();
+  
+      res.status(200).json({ success: true, message: 'User updated successfully' });
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-        success: false,
-        message: "Error fetching user details",
-      });
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
     }
   };
   
+  
+
+exports.userDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID is required",
+            });
+        }
+        const userDetails = await User.findById(id);
+        if (!userDetails) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            userDetails,
+            message: "User details fetched successfully",
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Error fetching user details",
+        });
+    }
+};

@@ -1,9 +1,12 @@
 .container {
-  background-color: #1F1F23;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 50px;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+  background-color: #1c1c1e;
+  min-height: 100vh;
+  color: #ffffff;
 }
 
 .navbar {
@@ -123,14 +126,21 @@
   border-radius: 10px;
 }
 
-.fieldsContainer {
+/* .fieldsContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-left: 270px;
   width: calc(100% - 270px);
   padding: 20px;
+} */
+.fieldsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
+
 
 .formField {
   margin-bottom: 10px;
@@ -140,6 +150,7 @@
   background-color: #18181B;
   border-radius: 10px;
   position: relative;
+  border: 1px solid transparent; /* Change from #444 to transparent */
 }
 
 .fieldHeader {
@@ -154,7 +165,14 @@
 }
 
 .deleteIcon {
+  position: absolute;
+  top: -10px; /* Adjust to position the icon at the top */
+  right: -10px; /* Adjust to position the icon at the top */
   cursor: pointer;
+  background-color: #18181B;
+  border-radius: 50%;
+  padding: 5px;
+  color: red; /* Ensure the delete icon is red */
 }
 
 .formField input {
@@ -166,7 +184,8 @@
   border-radius: 5px;
 }
 
-.errorInput {
+
+.inputContainer input.errorInput {
   border-color: red;
 }
 
@@ -174,4 +193,54 @@
   color: red;
   font-size: 12px;
   margin-top: 5px;
+}
+.startBox {
+  width: 200px;
+  height: 50px;
+  background-color: #18181B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  margin: 40px 0 20px 0; /* Adjusted margin to bring it a little down */
+  font-size: 1.2rem;
+  gap: 10px;
+}
+/* Field.module.css */
+
+/* FormPage.module.css */
+
+.formField {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.fieldHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deleteIcon {
+  cursor: pointer;
+}
+
+.inputContainer {
+  margin-top: 5px;
+}
+
+.errorInput {
+  border: 1px solid red;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.errorInputContainer {
+  border-color: red;
 }

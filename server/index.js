@@ -19,11 +19,10 @@ app.use(cors(corsOptions));
 
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI).then(() => {
-    console.log('Connected to MongoDB');
-}).catch(err => {
-    console.log('Failed to connect to MongoDB', err);
-});
+mongoose
+.connect(process.env.MONGO_URI)
+.then(() => {console.log('Connected to MongoDB')})
+.catch(err => {console.log('Failed to connect to MongoDB', err)});
 
 const userRouter=require("./routes/userRoute")
 app.use("/user",userRouter)
@@ -31,14 +30,16 @@ const folderRouter=require("./routes/folderRoute")
 app.use("/folder",folderRouter)
 const formRouter=require("./routes/formRoute")
 app.use("/form",formRouter)
+const responseRouter = require("./routes/responseRoute")
+app.use("/responses", responseRouter);
 
 
 
 app.get('/health', (req, res) => {
     // res.send
     res.json({
-        message: 'Formbot listing API is working fine',
-        status: 'Working',
+        message: 'Formbot  API is working fine',
+        status: 'Working fine',
         date: new Date().toLocaleDateString()
     });
 });
@@ -46,7 +47,7 @@ app.get('/health', (req, res) => {
 // REDIRECT PAGE TO 404
 app.use("*", (req, res) => {
     res.status(404).json({
-        message: 'Endpoint not found',
+        message: 'Error loading page',
         status: 'Error',
     });
 });

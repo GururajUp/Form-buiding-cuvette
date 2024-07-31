@@ -1,0 +1,172 @@
+.inputBox {
+  width: 250px;
+  height: 24px;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  margin-left: 450px;
+  margin-top: 40px;
+}
+
+.sendButton {
+  height: 40px;
+  padding: 5px 10px;
+  font-size: 16px;
+  margin-left: 5px;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+  background-color: #1a5fff;
+  color: white;
+}
+
+.mediaContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-left: -35%;
+}
+
+.mediaContainer img {
+  margin-right: 10px;
+  border-radius: 50%;
+}
+.bubbleImage {
+  width: 40px; /* Adjust the size as needed */
+  height: 40px; /* Adjust the size as needed */
+  margin-right: 100px; /* Space between the image and the bubble */
+  display: flex;
+  align-items: center;
+}
+
+.fieldContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  overflow: scroll;
+}
+
+.chatBubble {
+  background-color: #f1f1f1;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 5px 0;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.chatBubble input {
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.chatBubble button {
+  margin-left: 5px;
+}
+
+.disabledInput {
+  background-color: grey;
+  color: white;
+  cursor: not-allowed;
+}
+
+.disabledButton {
+  background-color: grey;
+  color: white;
+  cursor: not-allowed;
+}
+
+.ratingBox {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.ratingButton {
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.selectedRating {
+  background-color: #FF8E21;
+  color: black;
+}
+
+.datePickerContainer {
+  display: flex;
+  align-items: center;
+}
+.ratingbbsend{
+  display: flex;
+  align-items: center;
+  margin-left: 400px;
+}
+.ratingContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.ratingBox {
+  background-color: blue;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 1px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+}
+.selectedRating {
+  background-color: #FF8E21; 
+}
+.ratingsend{
+  display: flex;
+  align-items: center;
+  margin-left: 450px;
+}
+.ratingsend div{
+ border-radius: 5px;
+ padding: 2px;
+ background-color: white;
+}
+
+.actionButton {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.actionButton.clicked {
+  background-color: #FF8E21;
+  color: white;
+}

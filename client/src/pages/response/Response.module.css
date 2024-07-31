@@ -1,53 +1,62 @@
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #18181b;
-    padding: 10px;
-    position: fixed; /* Make the navbar fixed */
-    top: 0; /* Position at the top */
-    left: 0; /* Align with the left edge */
-    width: 100%; /* Full width of the viewport */
-    z-index: 1000; /* Ensure it stays on top */
-    flex-shrink: 0;
-  }
-  .centerButtons {
-    display: flex;
-    flex-grow: 1;
-    justify-content: center;
-  }
-  .tabButton {
-    margin: 0 5px;
-    padding: 5px 10px;
-    background-color: #1c1c1c;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .tabButton:hover {
-    background-color: #444;
-  }
-  .rightButtons {
-    display: flex;
-    align-items: center;
-    margin-left: auto; /* Push the buttons to the right */
-  }
-  
-  .actionButton,
-  .saveButton,
-  .closeButton {
-    margin-left: 5px;
-    padding: 5px 10px;
-    background-color: #444;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px; /* Add border-radius for better appearance */
-  }
-  
-  .actionButton:hover,
-  .saveButton:hover,
-  .closeButton:hover {
-    background-color: #848890;
-  }
+.container {
+  padding: 20px;
+  background-color: #18181b;
+  color: white;
+  height: 100vh;
+  width: 100%;
+}
+
+.responseTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.responseTable th,
+.responseTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  color: white;
+}
+
+.data {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+.data div {
+  background-color: #323232;
+  padding: 40px 50px;
+  border-radius: 5px;
+}
+.noResponses {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  color: #666;
+  text-align: center;
+}
+.data {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+.data div {
+  background-color: #323232;
+  color: white;
+}
+.dataeach{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+.serial{
+  display: flex;
+  gap: 5px;
+}

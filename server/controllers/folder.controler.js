@@ -6,11 +6,16 @@ const User = require("../model/User");
 exports.createFolder = async (req, res) => {
     try {
       const { foldername } = req.body;
-      const user = req.user.userId; // Extract user ID from the request object (assuming auth middleware sets req.user)
-      console.log('User ID:', user);
-  
+      const user = req.user.userId;
+      
       if (!foldername) {
         return res.status(400).json({ message: "Folder name is required" });
+      }
+  
+      // Check if the folder already exists
+      const existingFolder = await Folder.findOne({ foldername, user });
+      if (existingFolder) {
+        return res.status(400).json({ message: "Folder already exists" });
       }
   
       const newFolder = new Folder({ foldername, user });
@@ -18,9 +23,10 @@ exports.createFolder = async (req, res) => {
   
       res.status(201).json({ message: "Folder created successfully", folder: newFolder });
     } catch (error) {
-      res.status(500).json({ message: "Error creating folder", error });
+      res.status(500).json({ message: "Error creating in folder", error });
     }
   };
+  
 
 
 // Get all folders
@@ -66,7 +72,7 @@ exports.deleteFolder = async (req, res) => {
 exports.getFoldersByUser =async(req,res)=>{
     try {
         const userId = req.params.userId;
-console.log("user id in controler",userId);
+
         // Find the user by ID
         const user = await User.findById(userId);
         if (!user) {

@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const validateLogin = require('../middleware/validateLogin');
+
 const { signup, login, updateUser,userDetails } = require('../controllers/auth');
 
-router.post('/signup', signup);
+router.post('/signup',  signup);
 
-router.post('/login', login);
+router.post('/login', validateLogin, login);
 
-router.put('/updateuser/:userId', updateUser);  // New route for updating user details
+router.put('/updateuser/:userId',  updateUser);
 
-router.get("/userdetails/:id", userDetails);
+router.get('/userdetails/:id', userDetails);
 
 module.exports = router;

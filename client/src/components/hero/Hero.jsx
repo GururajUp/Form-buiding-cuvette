@@ -15,6 +15,9 @@ import { useNavigate } from 'react-router-dom';
 import Footer from '../footer/Footer';
 import Explore from '../explore/Explore';
 import Result from '../result/Result';
+import Features from '../features/Features';
+import Conversion from '../conversion/Conversion';
+import Integrate from '../integrate/Integrate';
 
 
 const heroCompany = [
@@ -33,26 +36,28 @@ function Hero() {
 
   return (
     <div className={styles.heroContainer}>
-      <div className={styles.heroTitle}>
-        <img src={orange} alt="Orange Triangle" className={styles.heroImage} />
-        <div className={styles.heroDesc}>
-          <div className={`${styles.heroHeading} outfit`}>Build advanced chatbots visually</div>
-          <div className={`${styles.heroSubheading} open-sans`}>
-            Typebot gives you powerful blocks to create unique chat experiences. Embed them
-            anywhere on your web/mobile apps and start collecting results like magic.
-          </div>
-          <button onClick={() => navigate("/signup")} className={`${styles.heroSignup} open-sans`}>
-            Create a FormBot for free
-          </button>
+    <div className={styles.heroTitle}>
+      <img src={orange} alt="Orange Triangle" className={styles.heroImage} />
+      <div className={styles.heroDesc}>
+        <div className={`${styles.heroHeading} outfit`}>Build advanced chatbots visually</div>
+        <div className={`${styles.heroSubheading} open-sans`}>
+          Typebot gives you powerful blocks to create unique chat experiences. Embed them
+          anywhere on your web/mobile apps and start collecting results like magic.
         </div>
-        <img src={blue} alt="Blue" className={styles.heroImage} />
+        <button onClick={() => navigate("/register")} className={`${styles.heroSignup} open-sans`}>
+          Create a FormBot for free
+        </button>
       </div>
+      <img src={blue} alt="Blue" className={styles.heroImage} />
+    </div>
 
-      <div className={styles.heroChart}>
-        <img src={herochart} alt="Hero Chart" />
-      </div>
+    <div className={styles.heroChart}>
+      <img src={herochart} alt="Hero Chart" />
+    </div>
       <Explore />
+      <Integrate />
       <Result />
+      <Features/>
       <div className={`${styles.heroCompanyText} outfit`}>
         Loved by teams and creators from all around the world
       </div>
@@ -61,6 +66,7 @@ function Hero() {
           <img key={item.id} src={item.img} alt={`Team ${item.id}`} className={styles.companyImage} />
         ))}
       </div>
+      <Conversion />
       <Footer />
     </div>
   );
