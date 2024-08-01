@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
 const cors = require("cors");
-const path = require("path")
+// const path = require("path")
 
 
 const PORT = process.env.PORT || 3000;
@@ -11,14 +11,14 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
-// const corsOptions = {
-//     origin: 'http://localhost:5173', 
-//     optionsSuccessStatus: 200
-// };
+const corsOptions = {
+    origin: 'http://localhost:5173', 
+    optionsSuccessStatus: 200
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 
 // Connect to MongoDB
