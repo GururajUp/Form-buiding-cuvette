@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { saveForm, fetchform, deleteform, getFormByUser, fetchByUniqueUrl, getFormsByFolder, updateTheme, updateForm } = require("../controllers/Form.controller");
+const { saveForm, fetchform, deleteform, getFormByUser, fetchByUniqueUrl, getFormsByFolder, updateTheme, updateForm } = require("../controllers/form.controller");
 
 const { auth } = require("../middleware/auth");
 
